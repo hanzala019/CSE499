@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YOLOv8 Webcam Control</title>
+    <style>
+        #videoFeed {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="startVideo()" id="startBtn">Start</button>
+        <button onclick="stopVideo()" id="stopBtn" disabled>Stop</button>
+    </div>
+    <img id="videoFeed" src="" alt="Video Feed">
+
+    <script>
+        const videoElement = document.getElementById('videoFeed');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        function startVideo() {
+            fetch('/control', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({action: 'start'})
+            })
+            .then(() => {
+                videoElement.src = './video_feed';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            });
+        }
+
+        function stopVideo() {
+            fetch('/control', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({action: 'stop'})
+            })
+            .then(() => {
+                videoElement.src = '';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            });
+        }
+    </script>
+</body>
+</html>
